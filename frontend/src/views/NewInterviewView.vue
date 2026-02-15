@@ -50,56 +50,64 @@ async function handleCreate() {
 </script>
 
 <template>
-  <div class="new-interview">
-    <h1>新建面试</h1>
-    <p class="subtitle">配置面试参数，开始一次模拟面试</p>
+  <div class="new-page">
+    <div class="page-header">
+      <div>
+        <h1>新建面试</h1>
+        <p class="page-desc">配置面试参数，开始一次模拟面试</p>
+      </div>
+    </div>
 
-    <form class="card" @submit.prevent="handleCreate">
-      <div class="form-group">
-        <label>面试标题 *</label>
-        <input
-          v-model="form.title"
-          class="form-control"
-          placeholder="例如：阿里巴巴前端一面"
-          required
-        />
+    <form class="form-card card" @submit.prevent="handleCreate">
+      <div class="form-section">
+        <div class="section-label">基本信息</div>
+
+        <div class="form-group">
+          <label>面试标题 <span class="required">*</span></label>
+          <input v-model="form.title" class="form-control" placeholder="例如：阿里巴巴前端一面" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>目标职位 <span class="required">*</span></label>
+            <select v-model="form.position" class="form-control" required>
+              <option value="" disabled>选择职位</option>
+              <option v-for="p in positions" :key="p" :value="p">{{ p }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>面试语言</label>
+            <select v-model="form.language" class="form-control">
+              <option v-for="l in languages" :key="l.value" :value="l.value">{{ l.label }}</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>目标职位 *</label>
-        <select v-model="form.position" class="form-control" required>
-          <option value="" disabled>选择职位</option>
-          <option v-for="p in positions" :key="p" :value="p">{{ p }}</option>
-        </select>
+      <div class="form-section">
+        <div class="section-label">简历内容 <span class="optional">(可选)</span></div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <textarea
+            v-model="form.resume"
+            class="form-control"
+            rows="6"
+            placeholder="粘贴你的简历内容，面试官会据此提问..."
+          />
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>面试语言</label>
-        <select v-model="form.language" class="form-control">
-          <option v-for="l in languages" :key="l.value" :value="l.value">
-            {{ l.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>简历内容 (可选)</label>
-        <textarea
-          v-model="form.resume"
-          class="form-control"
-          rows="5"
-          placeholder="粘贴你的简历内容，面试官会据此提问..."
-        />
-      </div>
-
-      <p v-if="error" class="error">{{ error }}</p>
+      <Transition name="fade">
+        <p v-if="error" class="error-msg">{{ error }}</p>
+      </Transition>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-secondary" @click="router.back()">
-          取消
+        <button type="button" class="btn btn-ghost" @click="router.back()">
+          ← 返回
         </button>
         <button type="submit" class="btn btn-primary" :disabled="loading">
-          {{ loading ? "创建中..." : "开始面试" }}
+          <span v-if="loading" class="spinner"></span>
+          {{ loading ? "创建中..." : "开始面试 →" }}
         </button>
       </div>
     </form>
@@ -107,31 +115,110 @@ async function handleCreate() {
 </template>
 
 <style scoped>
-.new-interview {
-  max-width: 600px;
+.new-page {
+  max-width: 640px;
+  animation: fadeInUp 0.5s ease both;
 }
 
-.new-interview h1 {
-  font-size: 24px;
-  margin-bottom: 4px;
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.subtitle {
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.page-desc {
   color: var(--text-secondary);
   font-size: 14px;
-  margin-bottom: 24px;
+  margin-top: 4px;
 }
 
-.error {
-  color: #ef4444;
+.form-card {
+  padding: 32px;
+}
+
+.form-section {
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-label {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.optional {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.required {
+  color: var(--danger);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.error-msg {
+  color: var(--danger);
   font-size: 13px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: var(--danger-soft);
+  border-radius: var(--radius);
+  border: 1px solid rgba(239, 68, 68, 0.15);
 }
 
 .form-actions {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
-  margin-top: 8px;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-enter-active { transition: all 0.3s; }
+.fade-leave-active { transition: all 0.2s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(-4px); }
+
+@media (max-width: 640px) {
+  .form-card { padding: 24px; }
+  .form-row { grid-template-columns: 1fr; }
 }
 </style>
