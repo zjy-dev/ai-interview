@@ -3,7 +3,10 @@
 // 在 proto 工具链就绪前，使用此文件保证编译通过。
 package conf
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 // Duration 包装 time.Duration，兼容 proto 生成的 durationpb.Duration
 type Duration struct {
@@ -19,6 +22,39 @@ func (d *Duration) AsDuration() time.Duration {
 		return 0
 	}
 	return d.d
+}
+
+// UnmarshalJSON 支持从 JSON 字符串 (如 "30s") 反序列化
+func (d *Duration) UnmarshalJSON(b []byte) error {
+	var s string
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+	dur, err := time.ParseDuration(s)
+	if err != nil {
+		return err
+	}
+	d.d = dur
+	return nil
+}
+
+// MarshalJSON 序列化为 JSON 字符串
+func (d Duration) MarshalJSON() ([]byte, error) {
+	return json.Marshal(d.d.String())
+}
+
+// UnmarshalYAML 支持从 YAML 字符串反序列化
+func (d *Duration) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var s string
+	if err := unmarshal(&s); err != nil {
+		return err
+	}
+	dur, err := time.ParseDuration(s)
+	if err != nil {
+		return err
+	}
+	d.d = dur
+	return nil
 }
 
 // Bootstrap 根配置

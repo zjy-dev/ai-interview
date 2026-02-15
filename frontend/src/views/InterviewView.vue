@@ -83,16 +83,49 @@ function handleKeydown(e: KeyboardEvent) {
     <!-- Header -->
     <div class="iv-header">
       <div class="iv-header-left">
-        <button class="btn btn-ghost btn-sm" @click="router.push('/interviews')">← 返回</button>
+        <button
+          class="btn btn-ghost btn-sm"
+          @click="router.push('/interviews')"
+        >
+          ← 返回
+        </button>
         <div class="iv-title">
           <h2>{{ store.current?.title || "面试" }}</h2>
           <span class="iv-position">{{ store.current?.position }}</span>
         </div>
       </div>
       <div class="iv-header-right">
-        <button class="btn-icon-toggle" @click="audio.enabled.value = !audio.enabled.value" :title="audio.enabled.value ? '关闭语音' : '开启语音'">
-          <svg v-if="audio.enabled.value" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        <button
+          class="btn-icon-toggle"
+          @click="audio.enabled.value = !audio.enabled.value"
+          :title="audio.enabled.value ? '关闭语音' : '开启语音'"
+        >
+          <svg
+            v-if="audio.enabled.value"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+          <svg
+            v-else
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+          </svg>
         </button>
         <button
           v-if="store.current?.status === 'active'"
@@ -120,12 +153,37 @@ function handleKeydown(e: KeyboardEvent) {
         :style="{ animationDelay: `${Math.min(index * 30, 300)}ms` }"
       >
         <div class="msg-avatar" :class="`avatar-${msg.role}`">
-          <svg v-if="msg.role === 'user'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 10a6 6 0 0 0 12 0"/><rect x="9" y="16" width="6" height="6" rx="1"/></svg>
+          <svg
+            v-if="msg.role === 'user'"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <svg
+            v-else
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
+            <path d="M6 10a6 6 0 0 0 12 0" />
+            <rect x="9" y="16" width="6" height="6" rx="1" />
+          </svg>
         </div>
         <div class="msg-body">
           <div class="msg-meta">
-            <span class="msg-sender">{{ msg.role === "user" ? "你" : "面试官" }}</span>
+            <span class="msg-sender">{{
+              msg.role === "user" ? "你" : "面试官"
+            }}</span>
           </div>
           <div class="msg-bubble">{{ msg.content }}</div>
         </div>
@@ -134,7 +192,18 @@ function handleKeydown(e: KeyboardEvent) {
       <!-- Typing indicator -->
       <div v-if="sending" class="msg msg-assistant">
         <div class="msg-avatar avatar-assistant">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 10a6 6 0 0 0 12 0"/><rect x="9" y="16" width="6" height="6" rx="1"/></svg>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
+            <path d="M6 10a6 6 0 0 0 12 0" />
+            <rect x="9" y="16" width="6" height="6" rx="1" />
+          </svg>
         </div>
         <div class="msg-body">
           <div class="msg-meta">
@@ -155,7 +224,9 @@ function handleKeydown(e: KeyboardEvent) {
         <textarea
           v-model="inputText"
           class="chat-input"
-          :placeholder="speech.isListening.value ? '正在录音...' : '输入你的回答...'"
+          :placeholder="
+            speech.isListening.value ? '正在录音...' : '输入你的回答...'
+          "
           rows="1"
           @keydown="handleKeydown"
         />
@@ -166,21 +237,54 @@ function handleKeydown(e: KeyboardEvent) {
             @click="toggleVoice"
             :title="speech.isListening.value ? '停止录音' : '语音输入'"
           >
-            <svg v-if="!speech.isListening.value" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-            <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+            <svg
+              v-if="!speech.isListening.value"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+            <svg
+              v-else
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="6" y="6" width="12" height="12" rx="2" />
+            </svg>
           </button>
           <button
             class="btn-send"
             :disabled="!inputText.trim() || sending"
             @click="sendMessage"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
           </button>
         </div>
       </div>
       <p v-if="speech.isListening.value" class="voice-status">
         <span class="rec-dot"></span>
-        录音中 — {{ speech.transcript.value || '等待语音...' }}
+        录音中 — {{ speech.transcript.value || "等待语音..." }}
       </p>
     </div>
   </div>
@@ -229,7 +333,10 @@ function handleKeydown(e: KeyboardEvent) {
   gap: 8px;
 }
 
-.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 13px;
+}
 
 .btn-icon-toggle {
   display: flex;
@@ -269,8 +376,14 @@ function handleKeydown(e: KeyboardEvent) {
 }
 
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .msg-user {
@@ -319,7 +432,7 @@ function handleKeydown(e: KeyboardEvent) {
 }
 
 .msg-sender {
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -366,12 +479,24 @@ function handleKeydown(e: KeyboardEvent) {
   animation: bounce 1.4s ease-in-out infinite;
 }
 
-.typing-bubble .dot:nth-child(2) { animation-delay: 0.16s; }
-.typing-bubble .dot:nth-child(3) { animation-delay: 0.32s; }
+.typing-bubble .dot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.typing-bubble .dot:nth-child(3) {
+  animation-delay: 0.32s;
+}
 
 @keyframes bounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-  30% { transform: translateY(-6px); opacity: 1; }
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
 }
 
 /* Input area */
@@ -390,19 +515,23 @@ function handleKeydown(e: KeyboardEvent) {
   border-radius: var(--radius-lg);
   padding: 10px 10px 10px 18px;
   box-shadow: var(--shadow);
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
 .input-card:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--ring), var(--shadow);
+  box-shadow:
+    0 0 0 3px var(--ring),
+    var(--shadow);
 }
 
 .chat-input {
   flex: 1;
   border: none;
   background: none;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: "DM Sans", system-ui, sans-serif;
   font-size: 15px;
   color: var(--text);
   resize: none;
@@ -412,7 +541,9 @@ function handleKeydown(e: KeyboardEvent) {
   padding: 6px 0;
 }
 
-.chat-input::placeholder { color: var(--text-muted); }
+.chat-input::placeholder {
+  color: var(--text-muted);
+}
 
 .input-actions {
   display: flex;
@@ -446,8 +577,13 @@ function handleKeydown(e: KeyboardEvent) {
 }
 
 @keyframes recPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); }
-  50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
 }
 
 .btn-send {
@@ -496,8 +632,16 @@ function handleKeydown(e: KeyboardEvent) {
 }
 
 @media (max-width: 640px) {
-  .interview-view { height: calc(100vh - 84px); }
-  .msg { max-width: 92%; }
-  .iv-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .interview-view {
+    height: calc(100vh - 84px);
+  }
+  .msg {
+    max-width: 92%;
+  }
+  .iv-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
 }
 </style>

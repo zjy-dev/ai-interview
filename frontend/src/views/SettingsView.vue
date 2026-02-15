@@ -74,7 +74,9 @@ async function saveSettings() {
   <div class="settings-view">
     <div class="settings-header">
       <h1>设置</h1>
-      <p class="settings-subtitle">配置 LLM、TTS 和 STT 服务参数，API Key 使用 BYOK 模式安全存储</p>
+      <p class="settings-subtitle">
+        配置 LLM、TTS 和 STT 服务参数，API Key 使用 BYOK 模式安全存储
+      </p>
     </div>
 
     <form @submit.prevent="saveSettings" class="settings-form">
@@ -82,7 +84,18 @@ async function saveSettings() {
       <div class="card section-card">
         <div class="section-top">
           <div class="section-icon icon-llm">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 10a6 6 0 0 0 12 0"/><rect x="9" y="16" width="6" height="6" rx="1"/></svg>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
+              <path d="M6 10a6 6 0 0 0 12 0" />
+              <rect x="9" y="16" width="6" height="6" rx="1" />
+            </svg>
           </div>
           <div class="section-label">LLM 大语言模型</div>
         </div>
@@ -92,31 +105,45 @@ async function saveSettings() {
             <label>提供商</label>
             <select v-model="form.llm_provider" class="form-control">
               <option value="" disabled>选择 LLM 提供商</option>
-              <option v-for="p in llmProviders" :key="p.value" :value="p.value">{{ p.label }}</option>
+              <option v-for="p in llmProviders" :key="p.value" :value="p.value">
+                {{ p.label }}
+              </option>
             </select>
           </div>
           <div class="form-group">
             <label>模型名称</label>
-            <input v-model="form.llm_model" class="form-control" placeholder="例如：gpt-4o, claude-sonnet-4-20250514" />
+            <input
+              v-model="form.llm_model"
+              class="form-control"
+              placeholder="例如：gpt-4o, claude-sonnet-4-20250514"
+            />
           </div>
         </div>
 
         <div class="form-group">
           <label>
             API Key
-            <span v-if="auth.settings?.llm_api_key_set" class="key-badge">已设置</span>
+            <span v-if="auth.settings?.llm_api_key_set" class="key-badge"
+              >已设置</span
+            >
           </label>
           <input
             v-model="form.llm_api_key"
             type="password"
             class="form-control"
-            :placeholder="auth.settings?.llm_api_key_set ? '留空保持不变' : '输入 API Key'"
+            :placeholder="
+              auth.settings?.llm_api_key_set ? '留空保持不变' : '输入 API Key'
+            "
           />
         </div>
 
         <div v-if="form.llm_provider === 'custom'" class="form-group">
           <label>Base URL</label>
-          <input v-model="form.llm_base_url" class="form-control" placeholder="https://api.example.com/v1" />
+          <input
+            v-model="form.llm_base_url"
+            class="form-control"
+            placeholder="https://api.example.com/v1"
+          />
         </div>
       </div>
 
@@ -124,14 +151,29 @@ async function saveSettings() {
       <div class="card section-card">
         <div class="section-top">
           <div class="section-icon icon-tts">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
           </div>
           <div class="section-label">TTS 文字转语音</div>
         </div>
 
         <label class="toggle-row">
           <span class="toggle-text">启用语音播放</span>
-          <button type="button" :class="['toggle-switch', { active: form.tts_enabled }]" @click="form.tts_enabled = !form.tts_enabled">
+          <button
+            type="button"
+            :class="['toggle-switch', { active: form.tts_enabled }]"
+            @click="form.tts_enabled = !form.tts_enabled"
+          >
             <span class="toggle-knob" />
           </button>
         </label>
@@ -142,25 +184,39 @@ async function saveSettings() {
               <label>提供商</label>
               <select v-model="form.tts_provider" class="form-control">
                 <option value="" disabled>选择 TTS 提供商</option>
-                <option v-for="p in ttsProviders" :key="p.value" :value="p.value">{{ p.label }}</option>
+                <option
+                  v-for="p in ttsProviders"
+                  :key="p.value"
+                  :value="p.value"
+                >
+                  {{ p.label }}
+                </option>
               </select>
             </div>
             <div class="form-group">
               <label>音色 / Voice ID</label>
-              <input v-model="form.tts_voice" class="form-control" placeholder="例如：alloy, shimmer" />
+              <input
+                v-model="form.tts_voice"
+                class="form-control"
+                placeholder="例如：alloy, shimmer"
+              />
             </div>
           </div>
 
           <div v-if="form.tts_provider !== 'edgetts'" class="form-group">
             <label>
               API Key
-              <span v-if="auth.settings?.tts_api_key_set" class="key-badge">已设置</span>
+              <span v-if="auth.settings?.tts_api_key_set" class="key-badge"
+                >已设置</span
+              >
             </label>
             <input
               v-model="form.tts_api_key"
               type="password"
               class="form-control"
-              :placeholder="auth.settings?.tts_api_key_set ? '留空保持不变' : '输入 API Key'"
+              :placeholder="
+                auth.settings?.tts_api_key_set ? '留空保持不变' : '输入 API Key'
+              "
             />
           </div>
         </template>
@@ -170,7 +226,19 @@ async function saveSettings() {
       <div class="card section-card">
         <div class="section-top">
           <div class="section-icon icon-stt">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
           </div>
           <div class="section-label">STT 语音识别</div>
         </div>
@@ -178,35 +246,80 @@ async function saveSettings() {
         <div class="form-group">
           <label>提供商</label>
           <select v-model="form.stt_provider" class="form-control">
-            <option v-for="p in sttProviders" :key="p.value" :value="p.value">{{ p.label }}</option>
+            <option v-for="p in sttProviders" :key="p.value" :value="p.value">
+              {{ p.label }}
+            </option>
           </select>
         </div>
 
         <div v-if="form.stt_provider === 'whisper'" class="form-group">
           <label>
             API Key
-            <span v-if="auth.settings?.stt_api_key_set" class="key-badge">已设置</span>
+            <span v-if="auth.settings?.stt_api_key_set" class="key-badge"
+              >已设置</span
+            >
           </label>
           <input
             v-model="form.stt_api_key"
             type="password"
             class="form-control"
-            :placeholder="auth.settings?.stt_api_key_set ? '留空保持不变' : '输入 OpenAI API Key'"
+            :placeholder="
+              auth.settings?.stt_api_key_set
+                ? '留空保持不变'
+                : '输入 OpenAI API Key'
+            "
           />
         </div>
       </div>
 
       <!-- Message & Submit -->
       <Transition name="fade">
-        <p v-if="message" :class="['msg-toast', { 'is-success': message === '设置已保存' }]">
-          <svg v-if="message === '设置已保存'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p
+          v-if="message"
+          :class="['msg-toast', { 'is-success': message === '设置已保存' }]"
+        >
+          <svg
+            v-if="message === '设置已保存'"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <svg
+            v-else
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
           {{ message }}
         </p>
       </Transition>
 
       <button type="submit" class="btn btn-primary btn-save" :disabled="saving">
-        <svg v-if="saving" class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <svg
+          v-if="saving"
+          class="spin"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        </svg>
         {{ saving ? "保存中..." : "保存设置" }}
       </button>
     </form>
@@ -221,8 +334,14 @@ async function saveSettings() {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .settings-header {
@@ -270,12 +389,21 @@ async function saveSettings() {
   justify-content: center;
 }
 
-.icon-llm { background: var(--primary-soft); color: var(--primary); }
-.icon-tts { background: var(--success-soft); color: var(--success); }
-.icon-stt { background: var(--warning-soft); color: var(--warning); }
+.icon-llm {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.icon-tts {
+  background: var(--success-soft);
+  color: var(--success);
+}
+.icon-stt {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
 
 .section-label {
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -352,7 +480,7 @@ async function saveSettings() {
   height: 18px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -378,8 +506,14 @@ async function saveSettings() {
   color: var(--success);
 }
 
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
 /* Save button */
 .btn-save {
@@ -397,11 +531,17 @@ async function saveSettings() {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 640px) {
-  .section-card { padding: 20px; }
-  .field-grid { grid-template-columns: 1fr; }
+  .section-card {
+    padding: 20px;
+  }
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

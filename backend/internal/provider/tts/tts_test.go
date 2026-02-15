@@ -1,5 +1,4 @@
 package tts
-package tts
 
 import (
 	"testing"

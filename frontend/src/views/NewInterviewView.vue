@@ -64,7 +64,12 @@ async function handleCreate() {
 
         <div class="form-group">
           <label>面试标题 <span class="required">*</span></label>
-          <input v-model="form.title" class="form-control" placeholder="例如：阿里巴巴前端一面" required />
+          <input
+            v-model="form.title"
+            class="form-control"
+            placeholder="例如：阿里巴巴前端一面"
+            required
+          />
         </div>
 
         <div class="form-row">
@@ -72,22 +77,28 @@ async function handleCreate() {
             <label>目标职位 <span class="required">*</span></label>
             <select v-model="form.position" class="form-control" required>
               <option value="" disabled>选择职位</option>
-              <option v-for="p in positions" :key="p" :value="p">{{ p }}</option>
+              <option v-for="p in positions" :key="p" :value="p">
+                {{ p }}
+              </option>
             </select>
           </div>
 
           <div class="form-group">
             <label>面试语言</label>
             <select v-model="form.language" class="form-control">
-              <option v-for="l in languages" :key="l.value" :value="l.value">{{ l.label }}</option>
+              <option v-for="l in languages" :key="l.value" :value="l.value">
+                {{ l.label }}
+              </option>
             </select>
           </div>
         </div>
       </div>
 
       <div class="form-section">
-        <div class="section-label">简历内容 <span class="optional">(可选)</span></div>
-        <div class="form-group" style="margin-bottom: 0;">
+        <div class="section-label">
+          简历内容 <span class="optional">(可选)</span>
+        </div>
+        <div class="form-group" style="margin-bottom: 0">
           <textarea
             v-model="form.resume"
             class="form-control"
@@ -121,8 +132,14 @@ async function handleCreate() {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-header {
@@ -157,7 +174,7 @@ async function handleCreate() {
 }
 
 .section-label {
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -210,15 +227,29 @@ async function handleCreate() {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.fade-enter-active { transition: all 0.3s; }
-.fade-leave-active { transition: all 0.2s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(-4px); }
+.fade-enter-active {
+  transition: all 0.3s;
+}
+.fade-leave-active {
+  transition: all 0.2s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
 
 @media (max-width: 640px) {
-  .form-card { padding: 24px; }
-  .form-row { grid-template-columns: 1fr; }
+  .form-card {
+    padding: 24px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

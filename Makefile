@@ -100,19 +100,20 @@ lint:
 	cd backend && golangci-lint run ./...
 
 .PHONY: migrate-up
-# run database migrations up
+# run database migrations up (via sql files)
 migrate-up:
-	cd backend && go run cmd/migrate/main.go up
+	@echo "Apply migrations from backend/sql/migrations/ to your database"
+	@echo "Usage: mysql -u root -p ai_interview < backend/sql/migrations/001_init.up.sql"
 
 .PHONY: migrate-down
 # run database migrations down
 migrate-down:
-	cd backend && go run cmd/migrate/main.go down
+	@echo "Rollback: mysql -u root -p ai_interview < backend/sql/migrations/001_init.down.sql"
 
 .PHONY: dev
 # start development server
 dev:
-	cd backend && go run cmd/server/main.go -conf configs/
+	cd backend && go run ./cmd/server/ -conf configs/
 
 .PHONY: docker
 # start docker compose services

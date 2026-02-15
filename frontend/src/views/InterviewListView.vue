@@ -46,7 +46,17 @@ function formatDate(d: string) {
         <p class="page-desc">管理你的所有模拟面试历史</p>
       </div>
       <button class="btn btn-primary" @click="router.push('/interviews/new')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
         新建面试
       </button>
     </div>
@@ -65,7 +75,17 @@ function formatDate(d: string) {
       <h3>还没有面试记录</h3>
       <p>开始你的第一次 AI 模拟面试吧</p>
       <button class="btn btn-primary" @click="router.push('/interviews/new')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
         开始面试
       </button>
     </div>
@@ -102,8 +122,14 @@ function formatDate(d: string) {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-header {
@@ -142,13 +168,26 @@ function formatDate(d: string) {
   animation: shimmer 1.5s infinite;
 }
 
-.skel-title { width: 60%; height: 20px; margin-bottom: 12px; }
-.skel-text { width: 40%; height: 14px; }
+.skel-title {
+  width: 60%;
+  height: 20px;
+  margin-bottom: 12px;
+}
+.skel-text {
+  width: 40%;
+  height: 14px;
+}
 
 @keyframes shimmer {
-  0% { opacity: 1; }
-  50% { opacity: 0.4; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Empty state */
@@ -166,8 +205,13 @@ function formatDate(d: string) {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .empty-state h3 {
@@ -193,12 +237,21 @@ function formatDate(d: string) {
   padding: 24px;
   position: relative;
   animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s,
+    border-color 0.25s;
 }
 
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .interview-card:hover {
@@ -223,7 +276,7 @@ function formatDate(d: string) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -249,21 +302,30 @@ function formatDate(d: string) {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .status-completed {
   color: var(--success);
   background: var(--success-soft);
 }
-.status-completed .status-dot { background: var(--success); }
+.status-completed .status-dot {
+  background: var(--success);
+}
 
 .status-cancelled {
   color: var(--text-muted);
   background: var(--border);
 }
-.status-cancelled .status-dot { background: var(--text-muted); }
+.status-cancelled .status-dot {
+  background: var(--text-muted);
+}
 
 .card-date {
   font-size: 12px;
@@ -291,17 +353,34 @@ function formatDate(d: string) {
 .card-arrow {
   font-size: 18px;
   color: var(--text-muted);
-  transition: transform 0.25s, color 0.25s;
+  transition:
+    transform 0.25s,
+    color 0.25s;
 }
 
 /* List transition */
-.list-enter-active { transition: all 0.4s ease; }
-.list-leave-active { transition: all 0.3s ease; }
-.list-enter-from { opacity: 0; transform: translateY(20px); }
-.list-leave-to { opacity: 0; transform: translateX(-20px); }
+.list-enter-active {
+  transition: all 0.4s ease;
+}
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
 
 @media (max-width: 640px) {
-  .interview-grid { grid-template-columns: 1fr; }
-  .page-header { flex-direction: column; gap: 16px; }
+  .interview-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 </style>

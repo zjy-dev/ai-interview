@@ -5,12 +5,14 @@ services:
       dockerfile: backend/Dockerfile
     container_name: ai-interview-backend
     restart: unless-stopped
-    env_file: .env
+    env_file:
+      - path: .env
+        required: false
     environment:
       DB_DSN: "root:password@tcp(mysql:3306)/ai_interview?parseTime=true&charset=utf8mb4"
       REDIS_ADDR: "redis:6379"
     ports:
-      - "8000:8000"
+      - "8080:8080"
     depends_on:
       mysql:
         condition: service_healthy

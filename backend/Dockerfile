@@ -1,6 +1,6 @@
 FROM golang:1.23-alpine AS builder
 
-RUN apk add --no-cache git make
+RUN apk add --no-cache git
 
 WORKDIR /src
 
@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=builder /app/server .
 COPY backend/configs/ ./configs/
 
-EXPOSE 8000
+EXPOSE 8080
 
 ENTRYPOINT ["./server"]
 CMD ["-conf", "configs/"]

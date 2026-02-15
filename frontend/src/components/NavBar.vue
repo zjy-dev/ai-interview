@@ -37,13 +37,45 @@ function logout() {
       </div>
 
       <div class="nav-end">
-        <button class="theme-toggle" @click="toggle" :title="theme === 'light' ? '切换夜间模式' : '切换日间模式'">
+        <button
+          class="theme-toggle"
+          @click="toggle"
+          :title="theme === 'light' ? '切换夜间模式' : '切换日间模式'"
+        >
           <span class="theme-icon" :class="{ 'is-dark': theme === 'dark' }">
-            <svg v-if="theme === 'light'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            <svg
+              v-if="theme === 'light'"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
-            <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            <svg
+              v-else
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           </span>
         </button>
@@ -62,7 +94,9 @@ function logout() {
   backdrop-filter: var(--backdrop);
   -webkit-backdrop-filter: var(--backdrop);
   border-bottom: 1px solid var(--border);
-  transition: background 0.3s, border-color 0.3s;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
 }
 
 .navbar-inner {
@@ -96,7 +130,7 @@ function logout() {
 }
 
 .brand-text {
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -117,7 +151,7 @@ function logout() {
   gap: 6px;
   padding: 8px 16px;
   border-radius: var(--radius);
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -184,7 +218,7 @@ function logout() {
 .btn-logout {
   padding: 8px 16px;
   border-radius: var(--radius);
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
@@ -202,9 +236,18 @@ function logout() {
 
 /* Mobile */
 @media (max-width: 640px) {
-  .navbar-inner { padding: 0 16px; }
-  .nav-center { gap: 0; }
-  .nav-link { padding: 8px 10px; font-size: 13px; }
-  .nav-icon { display: none; }
+  .navbar-inner {
+    padding: 0 16px;
+  }
+  .nav-center {
+    gap: 0;
+  }
+  .nav-link {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  .nav-icon {
+    display: none;
+  }
 }
 </style>

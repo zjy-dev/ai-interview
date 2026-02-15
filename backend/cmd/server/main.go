@@ -75,6 +75,9 @@ func main() {
 	if dsn := os.Getenv("DB_DSN"); dsn != "" {
 		bc.Data.Database.Source = dsn
 	}
+	if redisAddr := os.Getenv("REDIS_ADDR"); redisAddr != "" {
+		bc.Data.Redis.Addr = redisAddr
+	}
 	if redisPwd := os.Getenv("REDIS_PASSWORD"); redisPwd != "" {
 		bc.Data.Redis.Password = redisPwd
 	}
