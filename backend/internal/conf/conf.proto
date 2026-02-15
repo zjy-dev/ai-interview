@@ -1,0 +1,72 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "ai-interview/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+  Auth auth = 3;
+  TTS tts = 4;
+  LLM llm = 5;
+  Interview interview = 6;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+  GRPC grpc = 2;
+}
+
+message Data {
+  message Database {
+    string driver = 1;
+    string source = 2;
+  }
+  message Redis {
+    string addr = 1;
+    string password = 2;
+    int32 db = 3;
+    google.protobuf.Duration read_timeout = 4;
+    google.protobuf.Duration write_timeout = 5;
+  }
+  Database database = 1;
+  Redis redis = 2;
+}
+
+message Auth {
+  string jwt_secret = 1;
+  google.protobuf.Duration token_expire = 2;
+  string encryption_key = 3;
+}
+
+message TTS {
+  string default_provider = 1;
+  string default_voice = 2;
+  string audio_format = 3;
+  int32 sample_rate = 4;
+}
+
+message LLM {
+  string default_provider = 1;
+  string default_model = 2;
+  int32 max_tokens = 3;
+  float temperature = 4;
+}
+
+message Interview {
+  int32 max_questions = 1;
+  string default_language = 2;
+  string system_prompt = 3;
+}

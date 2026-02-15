@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package api.auth.v1;
+
+option go_package = "ai-interview/api/auth/v1;v1";
+
+import "google/api/annotations.proto";
+
+// 认证服务
+service AuthService {
+  // 用户注册
+  rpc Register (RegisterRequest) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/register"
+      body: "*"
+    };
+  }
+
+  // 用户登录
+  rpc Login (LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/login"
+      body: "*"
+    };
+  }
+
+  // 获取当前用户信息
+  rpc GetProfile (GetProfileRequest) returns (GetProfileReply) {
+    option (google.api.http) = {
+      get: "/api/v1/auth/profile"
+    };
+  }
+
+  // 更新用户设置 (BYOK Key, TTS/LLM 偏好)
+  rpc UpdateSettings (UpdateSettingsRequest) returns (UpdateSettingsReply) {
+    option (google.api.http) = {
+      put: "/api/v1/auth/settings"
+      body: "*"
+    };
+  }
+
+  // 获取用户设置
+  rpc GetSettings (GetSettingsRequest) returns (GetSettingsReply) {
+    option (google.api.http) = {
+      get: "/api/v1/auth/settings"
+    };
+  }
+}
+
+// ========== 消息定义 ==========
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string nickname = 3;
+}
+
+message RegisterReply {
+  int64 id = 1;
+  string token = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  int64 id = 1;
+  string token = 2;
+  string nickname = 3;
+}
+
+message GetProfileRequest {}
+
+message GetProfileReply {
+  int64 id = 1;
+  string email = 2;
+  string nickname = 3;
+  string created_at = 4;
+}
+
+message UpdateSettingsRequest {
+  // LLM 设置
+  string llm_provider = 1;
+  string llm_api_key = 2; // BYOK - 会加密存储
+  string llm_base_url = 3; // 自定义端点 (可选)
+  string llm_model = 4;
+
+  // TTS 设置
+  string tts_provider = 5;
+  string tts_api_key = 6; // BYOK - 会加密存储
+  string tts_voice = 7;
+  bool tts_enabled = 8; // 是否启用语音播报
+
+  // STT 设置
+  string stt_provider = 9; // browser (Web Speech API) 或 whisper
+  string stt_api_key = 10; // Whisper BYOK key
+}
+
+message UpdateSettingsReply {
+  bool success = 1;
+}
+
+message GetSettingsRequest {}
+
+message GetSettingsReply {
+  string llm_provider = 1;
+  bool llm_api_key_set = 2; // 是否已设置 (不返回明文)
+  string llm_base_url = 3;
+  string llm_model = 4;
+
+  string tts_provider = 5;
+  bool tts_api_key_set = 6;
+  string tts_voice = 7;
+  bool tts_enabled = 8;
+
+  string stt_provider = 9;
+  bool stt_api_key_set = 10;
+}

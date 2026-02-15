@@ -1,0 +1,9 @@
+# Development-only overrides (infra services only, no app build)
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# Works with both `docker compose` and `podman compose`
+services:
+  backend:
+    profiles: ["disabled"]
+
+  frontend:
+    profiles: ["disabled"]

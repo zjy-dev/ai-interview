@@ -1,0 +1,45 @@
+# Go
+backend/bin/
+backend/vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Generated
+backend/api/**/*.pb.go
+backend/api/**/*_http.pb.go
+backend/api/**/*_grpc.pb.go
+backend/internal/conf/*.pb.go
+backend/internal/data/sqlc/
+
+# Wire generated
+backend/cmd/server/wire_gen.go
+
+# Environment
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log

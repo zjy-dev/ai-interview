@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package api.interview.v1;
+
+option go_package = "ai-interview/api/interview/v1;v1";
+
+import "google/api/annotations.proto";
+
+// 面试服务
+service InterviewService {
+  // 创建面试会话
+  rpc CreateInterview (CreateInterviewRequest) returns (CreateInterviewReply) {
+    option (google.api.http) = {
+      post: "/api/v1/interviews"
+      body: "*"
+    };
+  }
+
+  // 获取面试详情
+  rpc GetInterview (GetInterviewRequest) returns (GetInterviewReply) {
+    option (google.api.http) = {
+      get: "/api/v1/interviews/{id}"
+    };
+  }
+
+  // 列出用户的面试记录
+  rpc ListInterviews (ListInterviewsRequest) returns (ListInterviewsReply) {
+    option (google.api.http) = {
+      get: "/api/v1/interviews"
+    };
+  }
+
+  // 发送消息 (文字输入)
+  rpc SendMessage (SendMessageRequest) returns (SendMessageReply) {
+    option (google.api.http) = {
+      post: "/api/v1/interviews/{interview_id}/messages"
+      body: "*"
+    };
+  }
+
+  // 结束面试
+  rpc EndInterview (EndInterviewRequest) returns (EndInterviewReply) {
+    option (google.api.http) = {
+      post: "/api/v1/interviews/{id}/end"
+      body: "*"
+    };
+  }
+
+  // 获取面试评估报告
+  rpc GetEvaluation (GetEvaluationRequest) returns (GetEvaluationReply) {
+    option (google.api.http) = {
+      get: "/api/v1/interviews/{interview_id}/evaluation"
+    };
+  }
+}
+
+// ========== 消息定义 ==========
+
+message CreateInterviewRequest {
+  string title = 1;
+  string position = 2; // 目标岗位
+  string language = 3; // 面试语言 (zh-CN, en-US)
+  string llm_provider = 4; // LLM 供应商
+  string llm_model = 5; // 模型名称
+  string tts_provider = 6; // TTS 供应商
+  string tts_voice = 7; // TTS 语音
+  string resume = 8; // 候选人简历 (可选)
+}
+
+message CreateInterviewReply {
+  int64 id = 1;
+  string title = 2;
+  string status = 3;
+  string websocket_url = 4; // WebSocket 连接地址 (用于实时交互)
+  string created_at = 5;
+}
+
+message GetInterviewRequest {
+  int64 id = 1;
+}
+
+message GetInterviewReply {
+  int64 id = 1;
+  string title = 2;
+  string position = 3;
+  string status = 4; // pending, in_progress, completed
+  string language = 5;
+  repeated Message messages = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message ListInterviewsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListInterviewsReply {
+  repeated InterviewSummary interviews = 1;
+  int32 total = 2;
+}
+
+message InterviewSummary {
+  int64 id = 1;
+  string title = 2;
+  string position = 3;
+  string status = 4;
+  int32 message_count = 5;
+  string created_at = 6;
+}
+
+message SendMessageRequest {
+  int64 interview_id = 1;
+  string content = 2; // 文字消息内容
+  string role = 3; // user
+}
+
+message SendMessageReply {
+  Message user_message = 1;
+  Message assistant_message = 2;
+}
+
+message Message {
+  int64 id = 1;
+  string role = 2; // user, assistant, system
+  string content = 3;
+  string created_at = 4;
+}
+
+message EndInterviewRequest {
+  int64 id = 1;
+}
+
+message EndInterviewReply {
+  string status = 1;
+  string evaluation_summary = 2;
+}
+
+message GetEvaluationRequest {
+  int64 interview_id = 1;
+}
+
+message GetEvaluationReply {
+  int64 id = 1;
+  int64 interview_id = 2;
+  int32 overall_score = 3; // 0-100
+  string summary = 4;
+  repeated CategoryScore categories = 5;
+  string strengths = 6;
+  string weaknesses = 7;
+  string suggestions = 8;
+  string created_at = 9;
+}
+
+message CategoryScore {
+  string category = 1; // e.g., "技术能力", "沟通表达", "逻辑思维"
+  int32 score = 2; // 0-100
+  string comment = 3;
+}

@@ -1,0 +1,44 @@
+server:
+  http:
+    addr: 0.0.0.0:8080
+    timeout: 30s
+  grpc:
+    addr: 0.0.0.0:9090
+    timeout: 30s
+
+data:
+  database:
+    driver: mysql
+    # DSN 从环境变量 DB_DSN 读取
+    source: ""
+  redis:
+    addr: 127.0.0.1:6379
+    password: ""
+    db: 0
+    read_timeout: 2s
+    write_timeout: 2s
+
+auth:
+  jwt_secret: ""  # 从环境变量 JWT_SECRET 读取
+  token_expire: 168h
+  encryption_key: ""  # 从环境变量 ENCRYPTION_KEY 读取
+
+tts:
+  default_provider: openai
+  default_voice: alloy
+  audio_format: pcm
+  sample_rate: 24000
+
+llm:
+  default_provider: openai
+  default_model: gpt-4o
+  max_tokens: 4096
+  temperature: 0.7
+
+interview:
+  max_questions: 15
+  default_language: zh-CN
+  system_prompt: |
+    你是一位专业的面试官。请根据候选人的简历和目标岗位，
+    进行结构化的面试。每次只问一个问题，等待候选人回答后
+    再提出下一个问题。面试结束后给出综合评估。
