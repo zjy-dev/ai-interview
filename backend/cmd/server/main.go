@@ -45,7 +45,9 @@ func main() {
 	flag.Parse()
 
 	// 加载 .env 文件 (敏感配置)
+	// 尝试当前目录和上级目录（make dev 从 backend/ 运行）
 	_ = godotenv.Load()
+	_ = godotenv.Load("../.env")
 
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
