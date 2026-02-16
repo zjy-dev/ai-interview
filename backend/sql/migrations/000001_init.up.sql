@@ -59,9 +59,9 @@ CREATE TABLE IF NOT EXISTS evaluations (
     overall_score INT NOT NULL DEFAULT 0,
     summary TEXT NOT NULL,
     categories JSON,
-    strengths TEXT NOT NULL DEFAULT '',
-    weaknesses TEXT NOT NULL DEFAULT '',
-    suggestions TEXT NOT NULL DEFAULT '',
+    strengths TEXT NOT NULL,
+    weaknesses TEXT NOT NULL,
+    suggestions TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_evaluations_interview FOREIGN KEY (interview_id) REFERENCES interviews(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

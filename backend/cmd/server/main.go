@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"time"
 
 	"ai-interview/internal/conf"
 	"ai-interview/internal/middleware"
@@ -96,7 +97,12 @@ func main() {
 	sttRegistry := initSTTRegistry()
 
 	// 初始化 JWT Helper
-	jwtHelper := middleware.NewJWTHelper(bc.Auth.JwtSecret, bc.Auth.TokenExpire.AsDuration())
+	tokenExpire := bc.Auth.TokenExpire.AsDuration()
+	if tokenExpire == 0 {
+		tokenExpire = 168 * time.Hour // 默认7天
+		log.NewHelper(logger).Warnf("token_expire not parsed, using default: %v", tokenExpire)
+	}
+	jwtHelper := middleware.NewJWTHelper(bc.Auth.JwtSecret, tokenExpire)
 
 	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, ttsRegistry, llmRegistry, sttRegistry, jwtHelper)
 	if err != nil {

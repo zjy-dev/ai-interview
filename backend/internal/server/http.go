@@ -4,6 +4,7 @@ import (
 	"ai-interview/internal/conf"
 	"ai-interview/internal/middleware"
 	"ai-interview/internal/service"
+	nethttp "net/http"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -23,6 +24,7 @@ func NewHTTPServer(
 		http.Middleware(
 			recovery.Recovery(),
 		),
+		http.Filter(corsFilter()),
 	}
 	if c.Http.Network != "" {
 		opts = append(opts, http.Network(c.Http.Network))
@@ -98,5 +100,22 @@ func withAuth(jwtHelper *middleware.JWTHelper, handler func(http.Context) error)
 		ctx.Reset(ctx.Response(), ctx.Request().WithContext(newCtx))
 
 		return handler(ctx)
+	}
+}
+
+// corsFilter 返回 CORS 过滤器
+func corsFilter() http.FilterFunc {
+	return func(next nethttp.Handler) nethttp.Handler {
+		return nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
+			w.Header().Set("Access-Control-Max-Age", "86400")
+			if r.Method == nethttp.MethodOptions {
+				w.WriteHeader(nethttp.StatusNoContent)
+				return
+			}
+			next.ServeHTTP(w, r)
+		})
 	}
 }

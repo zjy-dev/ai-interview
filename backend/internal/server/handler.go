@@ -34,8 +34,9 @@ func (h *authHandlerImpl) Register(ctx http.Context) error {
 	}
 
 	return ctx.JSON(200, map[string]any{
-		"id":    id,
-		"token": token,
+		"id":       id,
+		"token":    token,
+		"nickname": req.Nickname,
 	})
 }
 

@@ -43,6 +43,16 @@ func (d Duration) MarshalJSON() ([]byte, error) {
 	return json.Marshal(d.d.String())
 }
 
+// UnmarshalText 实现 encoding.TextUnmarshaler，支持 Kratos config.Scan 解析
+func (d *Duration) UnmarshalText(text []byte) error {
+	dur, err := time.ParseDuration(string(text))
+	if err != nil {
+		return err
+	}
+	d.d = dur
+	return nil
+}
+
 // UnmarshalYAML 支持从 YAML 字符串反序列化
 func (d *Duration) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var s string
