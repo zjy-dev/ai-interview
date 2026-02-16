@@ -6,8 +6,7 @@ services:
     container_name: ai-interview-backend
     restart: unless-stopped
     env_file:
-      - path: .env
-        required: false
+      - .env
     environment:
       DB_DSN: "root:password@tcp(mysql:3306)/ai_interview?parseTime=true&charset=utf8mb4"
       REDIS_ADDR: "redis:6379"

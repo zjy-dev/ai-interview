@@ -24,52 +24,91 @@ LLM + TTS 驱动的 AI 模拟面试平台。用户自带 API Key (BYOK)，支持
 - Go 1.23+、Node 22+、Make
 - Docker / Podman（运行 MySQL & Redis）
 
-### 1. 克隆 & 配置
+### 1. 克隆 & 配置环境变量
 
 ```bash
 git clone https://github.com/zjy-dev/ai-interview.git
 cd ai-interview
-cp .env.example .env   # 编辑 .env 填入密钥
+cp .env.example .env
 ```
 
-### 2. 启动基础设施
+编辑 `.env`，至少修改以下两项：
+
+```dotenv
+JWT_SECRET=<替换为一段随机字符串>
+ENCRYPTION_KEY=<64 位十六进制字符串，即 32 字节>
+```
+
+> `.env` 中的 `DB_DSN` / `REDIS_ADDR` 默认值指向 `127.0.0.1`（适合本地开发）。
+> 容器部署时 `docker-compose.yml` 的 `environment` 会自动覆盖这两项，指向容器内部的 `mysql` / `redis` 主机名。
+
+---
+
+### 方式一：本地开发
+
+适合需要调试后端/前端代码的场景。MySQL 和 Redis 跑在容器里，应用跑在宿主机。
 
 ```bash
-# 仅启动 MySQL + Redis（开发模式）
+# 1) 启动 MySQL + Redis（仅基础设施，不构建应用镜像）
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# 或使用 podman:
+podman compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+# 2) 安装工具链 & 生成代码
+make init          # 安装 protoc-gen-go, wire, sqlc 等
+make sqlc           # 从 SQL 生成 Go 数据访问代码
+make wire           # 生成依赖注入代码
+make build          # 编译后端二进制
+
+# 3) 安装前端依赖
+cd frontend && npm ci && cd ..
+
+# 4) 运行后端（终端 1）
+make dev            # 监听 :8080
+
+# 5) 运行前端（终端 2）
+cd frontend && npm run dev   # 监听 :5173，API 代理到 :8080
 ```
 
-### 3. 安装依赖 & 构建
+打开浏览器访问 **http://localhost:5173**
+
+> **Podman 用户注意**：Rootless Podman 的端口映射可能因 nftables 规则不生效，导致 `make dev` 连不上 `127.0.0.1:3306`。
+> 解决方法：用 `podman inspect ai-interview-mysql --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'` 获取容器 IP，
+> 然后修改 `.env` 中 `DB_DSN` 和 `REDIS_ADDR` 为该 IP。
+
+---
+
+### 方式二：一键容器部署
+
+适合演示或生产部署。四个服务全部运行在容器中。
 
 ```bash
-make init          # 安装 Go 工具链
-make sqlc           # 生成数据库代码
-make wire           # 生成依赖注入
-make build          # 编译后端
+# 确保 .env 已创建（见上方步骤 1）
 
-cd frontend && npm ci   # 安装前端依赖
+# Docker Compose:
+docker compose up -d --build
+
+# 或 Podman Compose:
+podman compose up -d --build
 ```
 
-### 4. 运行
+这会启动 4 个容器：
+
+| 容器 | 端口 | 说明 |
+|------|------|------|
+| `ai-interview-frontend` | **:80** → 80 | Nginx 托管 Vue SPA，反代 `/api/` 到后端 |
+| `ai-interview-backend` | **:8080** → 8080 | Go Kratos HTTP 服务 |
+| `ai-interview-mysql` | **:3306** → 3306 | MySQL 8.0 |
+| `ai-interview-redis` | **:6379** → 6379 | Redis 7 |
+
+打开浏览器访问 **http://localhost**
+
+停止所有服务：
 
 ```bash
-# 后端
-make dev
-
-# 前端（另一个终端）
-cd frontend && npm run dev
+docker compose down           # 保留数据卷
+docker compose down -v        # 同时删除数据卷（清空数据库）
 ```
-
-访问 http://localhost:5173
-
-### 一键容器部署
-
-```bash
-cp .env.example .env   # 编辑 .env
-docker compose up -d   # 启动全部服务
-```
-
-访问 http://localhost
 
 ## 测试
 
