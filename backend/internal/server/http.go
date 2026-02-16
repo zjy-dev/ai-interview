@@ -95,8 +95,8 @@ func withAuth(jwtHelper *middleware.JWTHelper, handler func(http.Context) error)
 			return ctx.JSON(401, map[string]string{"error": "invalid token"})
 		}
 
-		// 将 userID 存入 context
-		newCtx := middleware.ContextWithUserID(ctx, userID)
+		// 将 userID 存入 context（必须用 request 的 context 作为父，避免循环引用）
+		newCtx := middleware.ContextWithUserID(ctx.Request().Context(), userID)
 		ctx.Reset(ctx.Response(), ctx.Request().WithContext(newCtx))
 
 		return handler(ctx)
