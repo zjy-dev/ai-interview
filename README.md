@@ -50,9 +50,9 @@ ENCRYPTION_KEY=<64 位十六进制字符串，即 32 字节>
 
 ```bash
 # 1) 启动 MySQL + Redis（仅基础设施，不构建应用镜像）
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up -d
 # 或使用 podman:
-podman compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+podman compose -f docker-compose.dev.yml up -d
 
 # 2) 安装工具链 & 生成代码
 make init          # 安装 protoc-gen-go, wire, sqlc 等

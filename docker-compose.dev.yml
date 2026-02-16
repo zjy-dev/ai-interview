@@ -1,9 +1,40 @@
-# Development-only overrides (infra services only, no app build)
-# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-# Works with both `docker compose` and `podman compose`
+# 开发模式 — 仅启动 MySQL + Redis（不构建应用镜像）
+# 用法: docker compose -f docker-compose.dev.yml up -d
+#       podman compose -f docker-compose.dev.yml up -d
 services:
-  backend:
-    profiles: ["disabled"]
+  mysql:
+    image: mysql:8.0
+    container_name: ai-interview-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ai_interview
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  frontend:
-    profiles: ["disabled"]
+  redis:
+    image: redis:7-alpine
+    container_name: ai-interview-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+  redis_data:
