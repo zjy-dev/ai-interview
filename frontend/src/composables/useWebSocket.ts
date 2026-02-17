@@ -1,7 +1,7 @@
 import { ref, onUnmounted } from 'vue'
 
 export interface WSMessage {
-  type: 'text' | 'audio' | 'status' | 'error' | 'evaluation'
+  type: 'text_start' | 'text_delta' | 'text_end' | 'audio' | 'status' | 'error' | 'evaluation'
   data: any
 }
 

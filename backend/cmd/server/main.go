@@ -91,6 +91,18 @@ func main() {
 		bc.Auth.EncryptionKey = encKey
 	}
 
+	// 初始化 Encryptor（API Key 加密）
+	var encryptor *middleware.Encryptor
+	if encKey := bc.Auth.EncryptionKey; encKey != "" {
+		var encErr error
+		encryptor, encErr = middleware.NewEncryptor(encKey)
+		if encErr != nil {
+			log.NewHelper(logger).Warnf("failed to create encryptor: %v, API keys will be stored in plaintext", encErr)
+		}
+	} else {
+		log.NewHelper(logger).Warn("ENCRYPTION_KEY not set, API keys will be stored in plaintext")
+	}
+
 	// 初始化 Provider 注册表
 	ttsRegistry := initTTSRegistry()
 	llmRegistry := initLLMRegistry()
@@ -104,7 +116,7 @@ func main() {
 	}
 	jwtHelper := middleware.NewJWTHelper(bc.Auth.JwtSecret, tokenExpire)
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, ttsRegistry, llmRegistry, sttRegistry, jwtHelper)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, ttsRegistry, llmRegistry, sttRegistry, jwtHelper, encryptor)
 	if err != nil {
 		panic(err)
 	}

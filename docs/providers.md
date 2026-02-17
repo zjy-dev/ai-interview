@@ -40,7 +40,7 @@
 - **Provider 名称**: `openai`
 - **支持声音**: alloy, echo, fable, onyx, nova, shimmer
 - **API Key**: 与 LLM 共用 OpenAI API Key
-- **输出格式**: PCM 24kHz
+- **输出格式**: MP3
 
 ### Fish Audio
 
@@ -113,7 +113,7 @@ llm:
 Provider 采用 Registry 模式，新增步骤：
 
 1. 实现对应接口 (如 `llm.Provider`)
-2. 在 `init()` 中注册到全局 Registry
+2. 在 `cmd/server/main.go` 的 `initLLMRegistry()`（或对应的 `initTTSRegistry()`/`initSTTRegistry()`）中注册新 Provider
 3. 无需修改其他代码，运行时自动可用
 
 示例：
@@ -122,15 +122,21 @@ Provider 采用 Registry 模式，新增步骤：
 // internal/provider/llm/newprovider.go
 package llm
 
-func init() {
-    Register("newprovider", &NewProvider{})
-}
-
 type NewProvider struct{}
 
 func (p *NewProvider) Name() string { return "newprovider" }
 
 func (p *NewProvider) ChatStream(ctx context.Context, apiKey string, msgs []Message, opts Options) (<-chan StreamEvent, error) {
     // 实现流式聊天
+}
+```
+
+```go
+// cmd/server/main.go
+func initLLMRegistry() *llm.Registry {
+    registry := llm.NewRegistry()
+    // ... 其他 provider
+    registry.Register(llm.NewNewProvider())
+    return registry
 }
 ```

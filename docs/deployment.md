@@ -45,7 +45,7 @@ docker compose logs -f backend
 | 服务 | 容器端口 | 主机端口 |
 |------|---------|---------|
 | frontend (nginx) | 80 | 80 |
-| backend (Go) | 8000 | 8000 |
+| backend (Go) | 8080 | 8080 |
 | MySQL | 3306 | 3306 |
 | Redis | 6379 | 6379 |
 
@@ -151,6 +151,6 @@ make migrate-down
 ## 健康检查
 
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:8080/health
 # {"status":"ok"}
 ```

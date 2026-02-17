@@ -11,11 +11,12 @@ import (
 type AuthService struct {
 	uc        *biz.UserUsecase
 	jwtHelper *middleware.JWTHelper
+	encryptor *middleware.Encryptor
 }
 
 // NewAuthService 创建认证服务
-func NewAuthService(uc *biz.UserUsecase, jwtHelper *middleware.JWTHelper) *AuthService {
-	return &AuthService{uc: uc, jwtHelper: jwtHelper}
+func NewAuthService(uc *biz.UserUsecase, jwtHelper *middleware.JWTHelper, encryptor *middleware.Encryptor) *AuthService {
+	return &AuthService{uc: uc, jwtHelper: jwtHelper, encryptor: encryptor}
 }
 
 // Register 用户注册
@@ -55,6 +56,30 @@ func (s *AuthService) GetProfile(ctx context.Context, userID int64) (*biz.User, 
 
 // UpdateSettings 更新用户设置
 func (s *AuthService) UpdateSettings(ctx context.Context, settings *biz.UserSettings) error {
+	// 加密非空 API Keys
+	if s.encryptor != nil {
+		if settings.LLMAPIKey != "" {
+			encrypted, err := s.encryptor.Encrypt(settings.LLMAPIKey)
+			if err != nil {
+				return fmt.Errorf("encrypt llm api key: %w", err)
+			}
+			settings.LLMAPIKey = encrypted
+		}
+		if settings.TTSAPIKey != "" {
+			encrypted, err := s.encryptor.Encrypt(settings.TTSAPIKey)
+			if err != nil {
+				return fmt.Errorf("encrypt tts api key: %w", err)
+			}
+			settings.TTSAPIKey = encrypted
+		}
+		if settings.STTAPIKey != "" {
+			encrypted, err := s.encryptor.Encrypt(settings.STTAPIKey)
+			if err != nil {
+				return fmt.Errorf("encrypt stt api key: %w", err)
+			}
+			settings.STTAPIKey = encrypted
+		}
+	}
 	return s.uc.UpdateSettings(ctx, settings)
 }
 
