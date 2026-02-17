@@ -103,12 +103,12 @@ lint:
 # run database migrations up (via sql files)
 migrate-up:
 	@echo "Apply migrations from backend/sql/migrations/ to your database"
-	@echo "Usage: mysql -u root -p ai_interview < backend/sql/migrations/001_init.up.sql"
+	@echo "Usage: mysql -u root -p ai_interview < backend/sql/migrations/000001_init.up.sql"
 
 .PHONY: migrate-down
 # run database migrations down
 migrate-down:
-	@echo "Rollback: mysql -u root -p ai_interview < backend/sql/migrations/001_init.down.sql"
+	@echo "Rollback: mysql -u root -p ai_interview < backend/sql/migrations/000001_init.down.sql"
 
 .PHONY: dev
 # start development server

@@ -134,7 +134,7 @@ func (h *authHandlerImpl) UpdateSettings(ctx http.Context) error {
 		return ctx.JSON(400, map[string]string{"error": "invalid request"})
 	}
 
-	// TODO: 使用 Encryptor 加密 API Keys
+	// API Keys 加密由 Service 层处理 (AuthService.UpdateSettings)
 	settings := &biz.UserSettings{
 		UserID:      userID,
 		LLMProvider: req.LLMProvider,

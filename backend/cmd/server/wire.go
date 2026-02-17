@@ -27,6 +27,7 @@ func wireApp(
 	*llm.Registry,
 	*stt.Registry,
 	*middleware.JWTHelper,
+	*middleware.Encryptor,
 ) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		server.ProviderSet,

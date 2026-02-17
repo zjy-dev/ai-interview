@@ -25,7 +25,8 @@ Base URL: `/api/v1`
 ```json
 {
   "id": 1,
-  "token": "eyJhbGci..."
+  "token": "eyJhbGci...",
+  "nickname": "张三"
 }
 ```
 
@@ -116,7 +117,7 @@ Base URL: `/api/v1`
 
 **Response 200:**
 ```json
-{"message": "ok"}
+{"success": true}
 ```
 
 ---
@@ -140,7 +141,11 @@ Base URL: `/api/v1`
 **Response 200:**
 ```json
 {
-  "id": 1
+  "id": 1,
+  "title": "后端工程师面试",
+  "status": "in_progress",
+  "websocket_url": "/api/v1/ws/interview/1",
+  "created_at": "2025-01-01T00:00:00Z"
 }
 ```
 
@@ -205,7 +210,15 @@ Base URL: `/api/v1`
 **Response 200:**
 ```json
 {
-  "reply": "AI 面试官的回复..."
+  "user_message": {
+    "id": 1,
+    "role": "user",
+    "content": "我有5年Go开发经验..."
+  },
+  "assistant_message": {
+    "role": "assistant",
+    "content": "AI 面试官的回复..."
+  }
 }
 ```
 
@@ -217,7 +230,10 @@ Base URL: `/api/v1`
 
 **Response 200:**
 ```json
-{"message": "ok"}
+{
+  "status": "completed",
+  "evaluation_summary": "候选人表现良好..."
+}
 ```
 
 ---
@@ -229,15 +245,18 @@ Base URL: `/api/v1`
 **Response 200:**
 ```json
 {
+  "id": 1,
+  "interview_id": 1,
   "overall_score": 85,
   "summary": "候选人表现良好...",
   "categories": [
-    {"name": "技术能力", "score": 90},
-    {"name": "沟通表达", "score": 80}
+    {"category": "技术能力", "score": 90, "comment": "技术基础扎实"},
+    {"category": "沟通表达", "score": 80, "comment": "表达清晰"}
   ],
   "strengths": "技术基础扎实...",
   "weaknesses": "系统设计经验不足...",
-  "suggestions": "建议加强..."
+  "suggestions": "建议加强...",
+  "created_at": "2025-01-01T00:00:00Z"
 }
 ```
 
@@ -251,24 +270,30 @@ Base URL: `/api/v1`
 
 **连接:**
 ```
-ws://host/api/v1/ws/interview/{id}
-Headers: Authorization: Bearer <token>
+ws://host/api/v1/ws/interview/{id}?token=<jwt_token>
 ```
+
+> 注：WebSocket 不支持自定义 Header，认证通过 `?token=` 查询参数传递。
 
 **客户端 → 服务端** (Text Frame):
 ```json
-{"type": "message", "content": "用户的回答"}
+{"type": "text", "data": "用户的回答"}
+{"type": "end"}
+{"type": "ping"}
 ```
 
 **服务端 → 客户端** (Text Frame):
 ```json
-{"type": "text", "content": "单个 token"}
-{"type": "done"}
-{"type": "error", "content": "错误描述"}
+{"type": "text_start"}
+{"type": "text_delta", "data": "单个 token"}
+{"type": "text_end", "data": "完整回复文本"}
+{"type": "status", "data": "connected"}
+{"type": "evaluation", "data": {"overall_score": 85, "summary": "..."}}
+{"type": "error", "data": "错误描述"}
 ```
 
 **服务端 → 客户端** (Binary Frame):
-- PCM 音频数据 (24kHz, 16-bit, mono)
+- MP3 音频数据
 - 逐句合成推送，不等整段回复完成
 
 ---

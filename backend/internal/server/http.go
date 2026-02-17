@@ -84,8 +84,15 @@ func registerRoutes(
 // withAuth JWT 认证包装器
 func withAuth(jwtHelper *middleware.JWTHelper, handler func(http.Context) error) func(http.Context) error {
 	return func(ctx http.Context) error {
+		// 优先从 Authorization header 获取 token
 		authHeader := ctx.Header().Get("Authorization")
 		token := middleware.ExtractTokenFromHeader(authHeader)
+
+		// 如果 header 中没有 token，尝试从 query param 获取（WebSocket 连接场景）
+		if token == "" {
+			token = ctx.Query().Get("token")
+		}
+
 		if token == "" {
 			return ctx.JSON(401, map[string]string{"error": "unauthorized"})
 		}

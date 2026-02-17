@@ -15,7 +15,7 @@
                       ▼
 ┌──────────────────────────────────────────────────┐
 │                Backend (Go + Kratos)              │
-│                0.0.0.0:8000                       │
+│                0.0.0.0:8080                       │
 │                                                   │
 │  ┌─────────────────────────────────────────────┐  │
 │  │ Server Layer                                │  │
@@ -37,7 +37,7 @@
 │                 ▼             ▼                    │
 │  ┌──────────────────┐ ┌───────────────────────┐   │
 │  │ Data Layer       │ │ Provider Layer        │   │
-│  │ MySQL (sqlc)     │ │ LLM / TTS / STT      │   │
+│  │ MySQL (手写 SQL) │ │ LLM / TTS / STT      │   │
 │  │ Redis            │ │ (Registry 模式)       │   │
 │  └──────────────────┘ └───────────────────────┘   │
 └──────────────────────────────────────────────────┘
@@ -85,7 +85,7 @@
 
 ### Data 层 (`internal/data/`)
 
-数据访问，使用 sqlc 生成的代码：
+数据访问，使用手写 SQL（`database/sql` + `ExecContext/QueryRowContext`）：
 
 - **data.go** — 初始化 `*sql.DB` (MySQL) 和 `*redis.Client`
 - **user.go** — users / user_settings 表操作
@@ -95,12 +95,12 @@
 
 外部 AI 服务适配，采用 **Registry 模式**：
 
-每种能力 (LLM/TTS/STT) 定义统一接口 + 全局 Registry。运行时根据用户配置的 provider 名称查找实例。
+每种能力 (LLM/TTS/STT) 定义统一接口 + Registry。在 `cmd/server/main.go` 中集中注册所有 Provider 实例到 Registry，运行时根据用户配置的 provider 名称查找。
 
 ### Middleware (`internal/middleware/`)
 
 - **auth.go** — JWT 生成 (`GenerateToken`) / 验证 (`ValidateToken`) / HTTP 中间件
-- **crypto.go** — AES-256-GCM 加密/解密，用于保护用户 BYOK API Key
+- **crypto.go** — AES-256-GCM 加密/解密，用于保护用户 BYOK API Key（存储时加密，使用时解密）
 
 ## 依赖注入
 
@@ -113,27 +113,33 @@
 ### 连接
 
 ```
-GET /api/v1/ws/interview/{id}
-Headers: Authorization: Bearer <token>
+GET /api/v1/ws/interview/{id}?token=<jwt_token>
 Upgrade: websocket
 ```
+
+> 注：WebSocket 不支持自定义 Header，认证通过 `?token=` 查询参数传递。
 
 ### 消息格式
 
 **客户端 → 服务端** (Text Frame):
 ```json
-{"type": "message", "content": "用户回答文字"}
+{"type": "text", "data": "用户回答文字"}
+{"type": "end"}
+{"type": "ping"}
 ```
 
 **服务端 → 客户端** (Text Frame):
 ```json
-{"type": "text", "content": "AI 面试官回复 token"}
-{"type": "done"}
-{"type": "error", "content": "错误信息"}
+{"type": "text_start"}
+{"type": "text_delta", "data": "单个 token"}
+{"type": "text_end", "data": "完整回复文本"}
+{"type": "status", "data": "connected"}
+{"type": "evaluation", "data": {"overall_score": 85, "summary": "..."}}
+{"type": "error", "data": "错误信息"}
 ```
 
 **服务端 → 客户端** (Binary Frame):
-- PCM 音频数据 (24kHz, 16-bit, mono)
+- MP3 音频数据，逐句合成推送
 
 ## 数据库设计
 
